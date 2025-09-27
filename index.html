@@ -1,29 +1,270 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Absensi Siswa</title>
-  <script src="script_absensi.js" defer></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Monitor Ujian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg text-center">
-    <div class="flex justify-center mb-4">
-      <img src="logo.png" alt="Logo Sekolah" class="w-24 h-24 object-contain rounded-full shadow-md border-2 border-indigo-400">
+<body class="bg-slate-100">
+
+    <div class="container mx-auto p-4 pt-8">
+        
+        <!-- Halaman Pilihan Awal -->
+        <div id="selection-screen">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-slate-800">Dasbor Monitor Ujian</h1>
+                <p class="mt-2 text-slate-600">Pilih aktivitas yang ingin Anda pantau.</p>
+            </div>
+            <div class="mt-8 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                <button id="monitor-utama-btn" class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left">
+                    <h2 class="text-2xl font-bold text-indigo-600">Sesi Ulangan Utama</h2>
+                    <p class="mt-2 text-slate-500">Pantau murid yang sedang mengerjakan ulangan utama secara real-time.</p>
+                </button>
+                <button id="monitor-remedial-btn" class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left">
+                    <h2 class="text-2xl font-bold text-cyan-600">Sesi Remedial</h2>
+                    <p class="mt-2 text-slate-500">Pantau murid yang sedang mengerjakan remedial secara real-time.</p>
+                </button>
+                 <button id="monitor-history-btn" class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left">
+                    <h2 class="text-2xl font-bold text-amber-600">Riwayat Pelanggaran</h2>
+                    <p class="mt-2 text-slate-500">Lihat catatan permanen murid yang keluar dari tab ujian.</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Konten Utama Halaman Monitor (Awalnya Tersembunyi) -->
+        <main id="main-content" class="hidden">
+            <div class="text-center mb-6 relative">
+                 <button id="back-button" class="absolute top-0 left-0 bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg hover:bg-slate-300 transition-colors">
+                    &larr; Kembali
+                </button>
+                <h1 id="monitor-title" class="text-3xl font-bold text-slate-800"></h1>
+                <div id="live-stats" class="mt-2">
+                    <p class="font-semibold text-slate-700">Status: <span class="text-green-600">● Live</span></p>
+                    <p class="text-sm text-slate-500">Total Murid Mengerjakan: <span id="student-count" class="font-bold">0</span></p>
+                </div>
+            </div>
+            
+            <div id="monitoring-container" class="bg-white rounded-lg shadow-lg p-6">
+                <div id="student-list" class="divide-y divide-slate-200">
+                    <!-- Data akan dimuat di sini -->
+                </div>
+            </div>
+        </main>
     </div>
-    <h1 class="text-2xl font-bold text-indigo-600 mb-6">Absensi Shalat Online</h1>
-    <form id="absensiForm" class="space-y-4">
-      <input type="text" id="nama" name="nama" placeholder="Nama Siswa" required class="w-full px-4 py-2 border rounded-lg">
-      <select id="salat" name="salat" required class="w-full px-4 py-2 border rounded-lg">
-        <option value="">Pilih Shalat</option>
-        <option value="Dzuhur">Dzuhur</option>
-        <option value="Ashar">Ashar</option>
-      </select>
-      <button type="submit" class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600">Kirim Absensi</button>
-    </form>
-    <p id="status" class="mt-4 text-green-600 font-medium"></p>
-  </div>
+
+    <!-- Pop Up Konfirmasi Hapus Entri Riwayat -->
+    <div id="delete-entry-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg text-center">
+            <h2 class="text-2xl font-bold text-red-600">Konfirmasi Hapus</h2>
+            <p class="mt-4 text-slate-600">Apakah Anda yakin ingin menghapus riwayat pelanggaran untuk murid <strong id="student-name-to-delete"></strong>?</p>
+            <div class="mt-8 flex justify-center gap-4">
+                <button id="cancel-delete-entry-btn" class="bg-slate-200 text-slate-800 font-bold py-2 px-6 rounded-lg hover:bg-slate-300">Batal</button>
+                <button id="confirm-delete-entry-btn" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+        // --- PENGATURAN FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZCth3DrMVVdi0ONJgXv7DuoHJsf8-M5Q",
+            authDomain: "aplikasi-ulangan-sejarah.firebaseapp.com",
+            projectId: "aplikasi-ulangan-sejarah",
+            storageBucket: "aplikasi-ulangan-sejarah.appspot.com",
+            messagingSenderId: "571845428965",
+            appId: "1:571845428965:web:a8c4e5da384fbf798fb60c"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        // --- AKHIR PENGATURAN FIREBASE ---
+
+        // --- ELEMEN DOM ---
+        const selectionScreen = document.getElementById('selection-screen');
+        const mainContent = document.getElementById('main-content');
+        const monitorUtamaBtn = document.getElementById('monitor-utama-btn');
+        const monitorRemedialBtn = document.getElementById('monitor-remedial-btn');
+        const monitorHistoryBtn = document.getElementById('monitor-history-btn');
+        const backButton = document.getElementById('back-button');
+        const monitorTitle = document.getElementById('monitor-title');
+        const studentListContainer = document.getElementById('student-list');
+        const studentCount = document.getElementById('student-count');
+        const liveStats = document.getElementById('live-stats');
+        const deleteEntryModal = document.getElementById('delete-entry-modal');
+        const studentNameToDelete = document.getElementById('student-name-to-delete');
+        const cancelDeleteEntryBtn = document.getElementById('cancel-delete-entry-btn');
+        const confirmDeleteEntryBtn = document.getElementById('confirm-delete-entry-btn');
+
+        // --- STATE ---
+        let unsubscribe = null; 
+        let logIdToDelete = null;
+
+        // --- FUNGSI-FUNGSI ---
+        function showSelectionScreen() {
+            if (unsubscribe) {
+                unsubscribe(); 
+                unsubscribe = null;
+            }
+            mainContent.classList.add('hidden');
+            selectionScreen.classList.remove('hidden');
+        }
+
+        function showMonitoringScreen(type) {
+            selectionScreen.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            liveStats.classList.remove('hidden');
+
+            if (type === 'utama') {
+                monitorTitle.textContent = 'Monitor Sesi Ulangan Utama';
+                startMonitoring('exam_sessions', 'Belum ada murid yang memulai ulangan...');
+            } else if (type === 'remedial') {
+                monitorTitle.textContent = 'Monitor Sesi Remedial';
+                startMonitoring('remedial_sessions', 'Belum ada murid yang memulai remedial...');
+            } else if (type === 'history') {
+                monitorTitle.textContent = 'Riwayat Pelanggaran Pindah Tab';
+                liveStats.classList.add('hidden'); 
+                startHistoryMonitoring();
+            }
+        }
+
+        function renderStudentList(students, emptyMessage) {
+            studentListContainer.innerHTML = '';
+            studentCount.textContent = students.length;
+
+            if (students.length === 0) {
+                studentListContainer.innerHTML = `<p class="text-slate-500 text-center py-8">${emptyMessage}</p>`;
+                return;
+            }
+            
+            students.forEach(student => {
+                let statusClass = 'bg-green-100 text-green-800';
+                let statusText = student.status;
+
+                if (student.status === 'Beralih Tab') {
+                    statusClass = 'bg-red-100 text-red-800 animate-pulse';
+                    statusText = 'BERALIH TAB!';
+                }
+                
+                const studentElement = `
+                    <div class="flex items-center justify-between py-4">
+                        <div>
+                            <p class="font-bold text-lg text-slate-800">${student.nama}</p>
+                            <p class="text-sm text-slate-500">${student.kelas}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-slate-700">Progres: ${student.soalDikerjakan} / ${student.totalSoal}</p>
+                            <span class="text-xs font-bold px-2 py-1 rounded-full ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+                `;
+                studentListContainer.innerHTML += studentElement;
+            });
+        }
+
+        function renderHistoryList(logs) {
+            studentListContainer.innerHTML = '';
+             if (logs.length === 0) {
+                studentListContainer.innerHTML = `<p class="text-slate-500 text-center py-8">Tidak ada riwayat pelanggaran yang tercatat.</p>`;
+            }
+
+            logs.forEach(log => {
+                const timestamp = log.timestamp ? log.timestamp.toDate().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short'}) : 'Waktu tidak valid';
+                const typeClass = log.type === 'Remedial' ? 'bg-cyan-100 text-cyan-800' : 'bg-indigo-100 text-indigo-800';
+
+                const logElement = `
+                     <div class="flex items-center justify-between py-4 group">
+                        <div class="flex-1">
+                            <p class="font-bold text-lg text-slate-800">${log.nama}</p>
+                            <p class="text-sm text-slate-500">${log.kelas}</p>
+                        </div>
+                        <div class="text-right flex-1">
+                            <p class="text-sm text-slate-700">${timestamp} WIB</p>
+                            <span class="text-xs font-bold px-2 py-1 rounded-full ${typeClass}">Ujian: ${log.type}</span>
+                        </div>
+                        <div class="pl-4">
+                             <button data-log-id="${log.id}" data-student-name="${log.nama}" class="delete-history-btn bg-red-100 text-red-700 px-3 py-1 rounded-md text-sm hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity">Hapus</button>
+                        </div>
+                    </div>
+                `;
+                 studentListContainer.innerHTML += logElement;
+            });
+        }
+
+        function startMonitoring(collectionName, emptyMessage) {
+            const sessionsRef = db.collection(collectionName);
+            
+            unsubscribe = sessionsRef.orderBy("last_updated", "desc").onSnapshot(snapshot => {
+                const students = [];
+                snapshot.forEach(doc => {
+                    students.push(doc.data());
+                });
+                renderStudentList(students, emptyMessage);
+            }, error => {
+                console.error("Gagal memonitor: ", error);
+                studentListContainer.innerHTML = '<p class="text-red-500 text-center py-8">Gagal terhubung. Periksa koneksi dan pengaturan Firebase.</p>';
+            });
+        }
+
+        function startHistoryMonitoring() {
+            const historyRef = db.collection("cheating_log");
+
+            unsubscribe = historyRef.orderBy("timestamp", "desc").onSnapshot(snapshot => {
+                const logs = [];
+                snapshot.forEach(doc => {
+                    logs.push({ id: doc.id, ...doc.data() }); // Simpan ID dokumen
+                });
+                renderHistoryList(logs);
+            }, error => {
+                console.error("Gagal memuat riwayat: ", error);
+                studentListContainer.innerHTML = '<p class="text-red-500 text-center py-8">Gagal memuat riwayat. Periksa koneksi dan pengaturan Firebase.</p>';
+            });
+        }
+        
+        function handleDeleteRequest(e) {
+            if (e.target.classList.contains('delete-history-btn')) {
+                logIdToDelete = e.target.dataset.logId;
+                const studentName = e.target.dataset.studentName;
+                studentNameToDelete.textContent = studentName;
+                deleteEntryModal.classList.remove('hidden');
+            }
+        }
+
+        async function confirmDelete() {
+            if (!logIdToDelete) return;
+            
+            try {
+                await db.collection("cheating_log").doc(logIdToDelete).delete();
+                console.log("Entri riwayat berhasil dihapus:", logIdToDelete);
+                deleteEntryModal.classList.add('hidden');
+                logIdToDelete = null;
+            } catch (error) {
+                console.error("Gagal menghapus entri:", error);
+                alert("Gagal menghapus entri riwayat.");
+            }
+        }
+
+        // --- EVENT LISTENERS & INISIALISASI ---
+        monitorUtamaBtn.addEventListener('click', () => showMonitoringScreen('utama'));
+        monitorRemedialBtn.addEventListener('click', () => showMonitoringScreen('remedial'));
+        monitorHistoryBtn.addEventListener('click', () => showMonitoringScreen('history'));
+        backButton.addEventListener('click', showSelectionScreen);
+        
+        studentListContainer.addEventListener('click', handleDeleteRequest);
+        cancelDeleteEntryBtn.addEventListener('click', () => deleteEntryModal.classList.add('hidden'));
+        confirmDeleteEntryBtn.addEventListener('click', confirmDelete);
+
+    </script>
 </body>
 </html>
+
