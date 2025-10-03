@@ -13,11 +13,11 @@
         .tab-active {
             border-color: #4f46e5;
             color: #4f46e5;
-            background-color: #eef2ff;
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen">
+<body class="bg-slate-50">
 
     <!-- Pop Up/Modal Login Guru -->
     <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -42,153 +42,174 @@
     </div>
 
     <!-- Konten Utama Dasbor (Awalnya Tersembunyi) -->
-    <main id="main-content" class="container mx-auto p-4 pt-8 hidden">
-        <h1 class="text-4xl font-bold text-slate-800 text-center">Portal Guru</h1>
-
-        <!-- Navigasi Tab -->
-        <div class="mt-8 border-b border-gray-200">
-            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
-                <button id="tab-monitor" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">Monitor Sesi Live</button>
-                <button id="tab-history" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">Riwayat Pelanggaran</button>
-                <button id="tab-analysis" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">Analisis Jawaban</button>
-            </nav>
-        </div>
-
-        <!-- Konten Tab -->
-        <div class="mt-6">
-            <!-- Konten Tab Monitor -->
-            <div id="content-monitor" class="tab-content">
-                <div id="monitor-selection-screen">
-                    <div class="text-center">
-                        <h2 class="text-2xl font-bold text-slate-700">Pilih Sesi untuk Dipantau</h2>
-                    </div>
-                    <div class="mt-6 max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <button id="monitor-utama-btn" class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                            <h3 class="text-xl font-bold text-indigo-600">Ulangan Utama</h3>
-                        </button>
-                        <button id="monitor-remedial-btn" class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                            <h3 class="text-xl font-bold text-cyan-600">Remedial</h3>
-                        </button>
-                    </div>
-                </div>
-                <div id="monitor-display-screen" class="hidden">
-                    <div class="text-center mb-6 relative">
-                        <button id="monitor-back-button" class="absolute top-0 left-0 bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg hover:bg-slate-300 transition-colors">&larr; Kembali</button>
-                        <h2 id="monitor-title" class="text-3xl font-bold text-slate-800"></h2>
-                        <div id="live-stats" class="mt-2">
-                            <p class="font-semibold text-slate-700">Status: <span class="text-green-600">● Live</span></p>
-                            <p class="text-sm text-slate-500">Total Murid Mengerjakan: <span id="student-count" class="font-bold">0</span></p>
+    <main id="main-content" class="min-h-screen hidden">
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
                         </div>
-                        <button id="reset-live-session-button" class="absolute top-0 right-0 bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors">Reset Sesi Live</button>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-lg p-6">
-                        <div id="student-list" class="divide-y divide-slate-200"></div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-800">Portal Guru</h1>
+                            <p class="text-sm text-slate-500">Dasbor Ujian Terpadu</p>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="h-1 bg-indigo-500"></div>
+        </header>
 
-            <!-- Konten Tab Riwayat -->
-            <div id="content-history" class="tab-content hidden">
-                 <div class="bg-white rounded-lg shadow-lg p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-bold text-slate-800">Riwayat Pelanggaran Pindah Tab</h2>
-                        <button id="clear-history-button" class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors text-sm">Hapus Semua Riwayat</button>
-                    </div>
-                    <div id="history-list" class="divide-y divide-slate-200"></div>
+        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <!-- Navigasi Tab -->
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button id="tab-monitor" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-slate-700 hover:border-slate-300">Monitor Sesi Live</button>
+                        <button id="tab-history" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-slate-700 hover:border-slate-300">Riwayat Pelanggaran</button>
+                        <button id="tab-analysis" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-slate-700 hover:border-slate-300">Analisis Jawaban</button>
+                    </nav>
                 </div>
-            </div>
 
-            <!-- Konten Tab Analisis -->
-            <div id="content-analysis" class="tab-content hidden">
-                 <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-4">Analisis Jawaban Murid</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700">1. Pilih Ujian</label>
-                            <select id="exam-type-select" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm p-2">
-                                <option value="">-- Pilih --</option>
-                                <option value="utama">Ulangan Utama</option>
-                                <option value="remedial">Remedial</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="class-select" class="block text-sm font-medium text-slate-700">2. Pilih Kelas</label>
-                            <select id="class-select" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm p-2" disabled>
-                                <option>--</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="analysis-type-selection" class="hidden mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <div>
-                            <h3 class="font-semibold text-slate-800">Analisis Per Kelas</h3>
-                            <p class="text-sm text-slate-500 mb-2">Lihat rekapitulasi jawaban untuk seluruh kelas.</p>
-                            <button id="show-class-analysis-btn" class="w-full bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-cyan-700">
-                                Tampilkan Analisis Kelas
-                            </button>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-slate-800">Analisis Per Murid</h3>
-                            <p class="text-sm text-slate-500 mb-2">Pilih murid spesifik untuk melihat detail jawaban.</p>
-                            <div class="grid grid-cols-2 gap-2 items-end">
-                                <select id="student-select" class="block w-full rounded-md border-slate-300 shadow-sm p-2" disabled>
-                                    <option value="">-- Pilih Murid --</option>
-                                </select>
-                                <button id="show-student-analysis-btn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-slate-400" disabled>
-                                    Tampilkan
+                <!-- Konten Tab -->
+                <div class="mt-6">
+                    <!-- Konten Tab Monitor -->
+                    <div id="content-monitor" class="tab-content">
+                        <div id="monitor-selection-screen">
+                            <div class="text-center">
+                                <h2 class="text-2xl font-bold text-slate-700">Pilih Sesi untuk Dipantau</h2>
+                            </div>
+                            <div class="mt-6 max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <button id="monitor-utama-btn" class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                    <h3 class="text-xl font-bold text-indigo-600">Ulangan Utama</h3>
+                                </button>
+                                <button id="monitor-remedial-btn" class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                    <h3 class="text-xl font-bold text-cyan-600">Remedial</h3>
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    <p id="loading-status" class="text-center text-sm text-slate-500 mt-2 h-4"></p>
-                </div>
-                <div id="student-analysis-result-container" class="mt-6 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md hidden">
-                    <div class="mb-6 border-b pb-4">
-                        <h2 class="text-2xl font-bold text-slate-800">Hasil Analisis Murid</h2>
-                        <div class="mt-2 grid grid-cols-3 gap-4 text-center">
-                            <div>
-                                <p class="text-sm text-slate-500">Nama Murid</p>
-                                <p id="student-name-result" class="font-bold text-lg"></p>
+                        <div id="monitor-display-screen" class="hidden">
+                            <div class="text-center mb-6 relative">
+                                <button id="monitor-back-button" class="absolute top-0 left-0 bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg hover:bg-slate-300 transition-colors">&larr; Kembali</button>
+                                <h2 id="monitor-title" class="text-3xl font-bold text-slate-800"></h2>
+                                <div id="live-stats" class="mt-2">
+                                    <p class="font-semibold text-slate-700">Status: <span class="text-green-600">● Live</span></p>
+                                    <p class="text-sm text-slate-500">Total Murid Mengerjakan: <span id="student-count" class="font-bold">0</span></p>
+                                </div>
+                                <button id="reset-live-session-button" class="absolute top-0 right-0 bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors">Reset Sesi Live</button>
                             </div>
-                            <div>
-                                <p class="text-sm text-slate-500">Kelas</p>
-                                <p id="student-class-result" class="font-bold text-lg"></p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-slate-500">Skor Akhir</p>
-                                <p id="student-score-result" class="font-bold text-lg"></p>
+                            <div class="bg-white rounded-lg shadow-lg p-6">
+                                <div id="student-list" class="divide-y divide-slate-200"></div>
                             </div>
                         </div>
                     </div>
-                    <div id="question-analysis-list" class="space-y-4"></div>
-                </div>
-                <div id="class-analysis-result-container" class="mt-6 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md hidden">
-                    <div class="mb-6 border-b pb-4">
-                        <h2 class="text-2xl font-bold text-slate-800">Hasil Analisis Kelas</h2>
-                        <div class="mt-2 grid grid-cols-3 gap-4 text-center">
-                            <div>
-                                <p class="text-sm text-slate-500">Kelas</p>
-                                <p id="class-name-result" class="font-bold text-lg"></p>
+
+                    <!-- Konten Tab Riwayat -->
+                    <div id="content-history" class="tab-content hidden">
+                         <div class="bg-white rounded-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-2xl font-bold text-slate-800">Riwayat Pelanggaran Pindah Tab</h2>
+                                <button id="clear-history-button" class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors text-sm">Hapus Semua Riwayat</button>
                             </div>
-                            <div>
-                                <p class="text-sm text-slate-500">Jumlah Peserta</p>
-                                <p id="class-student-count" class="font-bold text-lg"></p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-slate-500">Rata-rata Skor</p>
-                                <p id="class-average-score" class="font-bold text-lg"></p>
-                            </div>
+                            <div id="history-list" class="divide-y divide-slate-200"></div>
                         </div>
                     </div>
-                    <div id="gemini-feature-container" class="my-6">
-                        <button id="generate-summary-btn" class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
-                            ✨ Buat Ringkasan Analisis dengan AI
-                        </button>
-                        <div id="ai-summary-container" class="mt-4 hidden p-4 border rounded-lg bg-slate-50">
-                            <h3 class="text-lg font-bold text-slate-800 mb-2">Ringkasan Analisis AI</h3>
-                            <div id="ai-summary-content" class="text-slate-700 space-y-2"></div>
+
+                    <!-- Konten Tab Analisis -->
+                    <div id="content-analysis" class="tab-content hidden">
+                         <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg">
+                            <h2 class="text-2xl font-bold text-slate-800 mb-4">Analisis Jawaban Murid</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700">1. Pilih Ujian</label>
+                                    <select id="exam-type-select" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm p-2">
+                                        <option value="">-- Pilih --</option>
+                                        <option value="utama">Ulangan Utama</option>
+                                        <option value="remedial">Remedial</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="class-select" class="block text-sm font-medium text-slate-700">2. Pilih Kelas</label>
+                                    <select id="class-select" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm p-2" disabled>
+                                        <option>--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="analysis-type-selection" class="hidden mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2 gap-6">
+                                 <div>
+                                    <h3 class="font-semibold text-slate-800">Analisis Per Kelas</h3>
+                                    <p class="text-sm text-slate-500 mb-2">Lihat rekapitulasi jawaban untuk seluruh kelas.</p>
+                                    <button id="show-class-analysis-btn" class="w-full bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-cyan-700">
+                                        Tampilkan Analisis Kelas
+                                    </button>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-slate-800">Analisis Per Murid</h3>
+                                    <p class="text-sm text-slate-500 mb-2">Pilih murid spesifik untuk melihat detail jawaban.</p>
+                                    <div class="grid grid-cols-2 gap-2 items-end">
+                                        <select id="student-select" class="block w-full rounded-md border-slate-300 shadow-sm p-2" disabled>
+                                            <option value="">-- Pilih Murid --</option>
+                                        </select>
+                                        <button id="show-student-analysis-btn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-slate-400" disabled>
+                                            Tampilkan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="loading-status" class="text-center text-sm text-slate-500 mt-2 h-4"></p>
+                        </div>
+                        <div id="student-analysis-result-container" class="mt-6 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md hidden">
+                            <div class="mb-6 border-b pb-4">
+                                <h2 class="text-2xl font-bold text-slate-800">Hasil Analisis Murid</h2>
+                                <div class="mt-2 grid grid-cols-3 gap-4 text-center">
+                                    <div>
+                                        <p class="text-sm text-slate-500">Nama Murid</p>
+                                        <p id="student-name-result" class="font-bold text-lg"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Kelas</p>
+                                        <p id="student-class-result" class="font-bold text-lg"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Skor Akhir</p>
+                                        <p id="student-score-result" class="font-bold text-lg"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="question-analysis-list" class="space-y-4"></div>
+                        </div>
+                        <div id="class-analysis-result-container" class="mt-6 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md hidden">
+                            <div class="mb-6 border-b pb-4">
+                                <h2 class="text-2xl font-bold text-slate-800">Hasil Analisis Kelas</h2>
+                                <div class="mt-2 grid grid-cols-3 gap-4 text-center">
+                                    <div>
+                                        <p class="text-sm text-slate-500">Kelas</p>
+                                        <p id="class-name-result" class="font-bold text-lg"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Jumlah Peserta</p>
+                                        <p id="class-student-count" class="font-bold text-lg"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Rata-rata Skor</p>
+                                        <p id="class-average-score" class="font-bold text-lg"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="gemini-feature-container" class="my-6">
+                                <button id="generate-summary-btn" class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
+                                    ✨ Buat Ringkasan Analisis dengan AI
+                                </button>
+                                <div id="ai-summary-container" class="mt-4 hidden p-4 border rounded-lg bg-slate-50">
+                                    <h3 class="text-lg font-bold text-slate-800 mb-2">Ringkasan Analisis AI</h3>
+                                    <div id="ai-summary-content" class="text-slate-700 space-y-2"></div>
+                                </div>
+                            </div>
+                            <div id="class-question-analysis-list" class="space-y-4"></div>
                         </div>
                     </div>
-                    <div id="class-question-analysis-list" class="space-y-4"></div>
                 </div>
             </div>
         </div>
@@ -199,17 +220,7 @@
     <div id="delete-entry-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"></div>
 
     <!-- Pop Up Konfirmasi Reset Sesi Live -->
-    <div id="reset-live-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg text-center">
-            <h2 class="text-2xl font-bold text-orange-600">Konfirmasi Reset Sesi</h2>
-            <p class="mt-4 text-slate-600">Apakah Anda yakin ingin mereset <strong>SEMUA</strong> sesi live yang sedang berjalan? Semua data murid yang sedang mengerjakan di monitor akan dihapus.</p>
-            <p id="reset-live-status" class="text-sm text-slate-500 mt-2 h-5"></p>
-            <div class="mt-8 flex justify-center gap-4">
-                <button id="cancel-reset-live-btn" class="bg-slate-200 text-slate-800 font-bold py-2 px-6 rounded-lg hover:bg-slate-300">Batal</button>
-                <button id="confirm-reset-live-btn" class="bg-orange-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-orange-700">Ya, Reset Sesi</button>
-            </div>
-        </div>
-    </div>
+    <div id="reset-live-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"></div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -240,7 +251,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         
-       // --- KODE LENGKAP UNTUK SEMUA FUNGSI ---
+        // --- KODE LENGKAP UNTUK SEMUA FUNGSI ---
         const allElements = {
             loginModal: document.getElementById('login-modal'), submitLoginButton: document.getElementById('submit-login-button'),
             teacherIdInput: document.getElementById('teacher-id'), teacherPasswordInput: document.getElementById('teacher-password'),
@@ -257,9 +268,6 @@
             deleteEntryModal: document.getElementById('delete-entry-modal'), 
             resetLiveSessionButton: document.getElementById('reset-live-session-button'),
             resetLiveModal: document.getElementById('reset-live-modal'),
-            cancelResetLiveBtn: document.getElementById('cancel-reset-live-btn'),
-            confirmResetLiveBtn: document.getElementById('confirm-reset-live-btn'),
-            resetLiveStatus: document.getElementById('reset-live-status'),
             examTypeSelect: document.getElementById('exam-type-select'),
             classSelect: document.getElementById('class-select'),
             studentSelect: document.getElementById('student-select'),
@@ -304,31 +312,32 @@
         function populateClassSelect(){const classes=[...new Set(allSubmissions.map(s=>s.Kelas))].filter(Boolean);allElements.classSelect.innerHTML='<option value="">-- Pilih Kelas --</option>',classes.sort().forEach(c=>{allElements.classSelect.innerHTML+=`<option value="${c}">${c}</option>`}),allElements.classSelect.disabled=!1}
         function populateStudentSelect(){const selectedClass=allElements.classSelect.value,studentsInClass=allSubmissions.filter(s=>s.Kelas===selectedClass);allElements.studentSelect.innerHTML='<option value="">-- Pilih Murid --</option>',studentsInClass.forEach((s,index)=>{const timestamp=new Date(s.Timestamp).toLocaleString("id-ID");allElements.studentSelect.innerHTML+=`<option value="${index}">${s.Nama} (${timestamp})</option>`})}
         function parseStudentAnswerLog(logString){const answers={};if(!logString)return answers;const entries=logString.split(";");return entries.forEach(entry=>{const match=entry.match(/Soal (\d+): "([^"]*)" \((Benar|Salah)\)/);match&&(answers[match[1]]={answer:match[2],isCorrect:"Benar"===match[3]})}),answers}
-        function displayStudentAnalysis(studentSubmission,questionBank){allElements.studentAnalysisResultContainer.classList.remove("hidden"),allElements.classAnalysisResultContainer.classList.add("hidden"),allElements.studentNameResult.textContent=studentSubmission.Nama,allElements.studentClassResult.textContent=studentSubmission.Kelas,allElements.studentScoreResult.textContent=studentSubmission.Skor,allElements.questionAnalysisList.innerHTML="";const studentAnswers=parseStudentAnswerLog(studentSubmission.Nomor_soal_dikerjakan),questionNumbersInLog=Object.keys(studentAnswers).map(Number).sort((a,b)=>a-b);questionNumbersInLog.forEach(qNumber=>{const questionData=questionBank.find(q=>q.originalIndex==qNumber),studentAnswerData=studentAnswers[qNumber];if(!questionData)return;const isCorrect=studentAnswerData.isCorrect,resultClass=isCorrect?"border-green-500 bg-green-50":"border-red-500 bg-red-50";let answerHtml=`<p class="mt-2 text-sm">Jawaban Murid: <span class="font-semibold text-green-700">${studentAnswerData.answer} (Benar)</span></p>`;isCorrect||(answerHtml=`\n                        <p class="mt-2 text-sm">Jawaban Murid: <span class="font-semibold text-red-700">${studentAnswerData.answer} (Salah)</span></p>\n                        <p class="mt-1 text-sm">Kunci Jawaban: <span class="font-semibold text-blue-700">${questionData.answer}</span></p>\n                    `);const questionElement=`\n                    <div class="p-4 border-l-4 ${resultClass} rounded-r-lg">\n                        <p class="font-semibold text-slate-800">Soal #${qNumber}: ${questionData.question}</p>\n                        ${answerHtml}\n                    </div>\n                `;allElements.questionAnalysisList.innerHTML+=questionElement})}
-        function displayClassAnalysis(submissionsForClass,questionBank){allElements.classAnalysisResultContainer.classList.remove("hidden"),allElements.studentAnalysisResultContainer.classList.add("hidden"),allElements.aiSummaryContainer.classList.add("hidden");const studentCount=submissionsForClass.length,totalScore=submissionsForClass.reduce((acc,s)=>acc+(parseInt(s.Skor)||0),0),avgScore=studentCount>0?(totalScore/studentCount).toFixed(1):0;allElements.classNameResult.textContent=allElements.classSelect.value,allElements.classStudentCount.textContent=studentCount,allElements.classAverageScore.textContent=avgScore;const questionAnalysis={};submissionsForClass.forEach(submission=>{const studentAnswers=parseStudentAnswerLog(submission.Nomor_soal_dikerjakan);Object.keys(studentAnswers).forEach(qNumber=>{questionAnalysis[qNumber]||(questionAnalysis[qNumber]={correct:0,total:0,correctStudents:[]}),questionAnalysis[qNumber].total++,studentAnswers[qNumber].isCorrect&&(questionAnalysis[qNumber].correct++,questionAnalysis[qNumber].correctStudents.push(submission.Nama))})}),classAnalysisData={className:allElements.classSelect.value,studentCount:studentCount,averageScore:avgScore,questionDetails:[]},allElements.classQuestionAnalysisList.innerHTML="",questionBank.sort((a,b)=>a.originalIndex-b.originalIndex).forEach(qData=>{const qNumber=qData.originalIndex,analysis=questionAnalysis[qNumber];if(!analysis)return;const correctPercentage=analysis.correct/analysis.total*100;let bgColor="bg-green-100";correctPercentage<75&&(bgColor="bg-yellow-100"),correctPercentage<50&&(bgColor="bg-red-100"),classAnalysisData.questionDetails.push({nomorSoal:qNumber,teksSoal:qData.question.substring(0,100)+"...",persentaseBenar:correctPercentage.toFixed(0)});const correctStudentsList=analysis.correctStudents.length>0?analysis.correctStudents.join(", "):"Tidak ada",questionElement=`\n                    <div class="p-4 border rounded-lg ${bgColor}">\n                        <p class="font-semibold text-slate-800">Soal #${qNumber}: ${qData.question}</p>\n                        <p class="mt-2 text-sm">Kunci Jawaban: <span class="font-semibold text-blue-700">${qData.answer}</span></p>\n                        <div class="mt-2 text-sm">\n                            <span>Dijawab benar oleh <strong>${analysis.correct}</strong> dari <strong>${analysis.total}</strong> murid</span>\n                            <div class="w-full bg-slate-200 rounded-full h-2.5 mt-1">\n                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${correctPercentage.toFixed(0)}%"></div>\n                            </div>\n                            <span class="font-bold float-right">${correctPercentage.toFixed(0)}%</span>\n                        </div>\n                        <details class="mt-3 text-sm">\n                            <summary class="cursor-pointer text-slate-600 hover:text-slate-900">Lihat Murid yang Menjawab Benar (${analysis.correct})</summary>\n                            <div class="mt-2 p-2 bg-white rounded border text-slate-700">\n                                ${correctStudentsList}\n                            </div>\n                        </details>\n                    </div>\n                `;allElements.classQuestionAnalysisList.innerHTML+=questionElement})}
+        function displayStudentAnalysis(studentSubmission,questionBank){allElements.studentAnalysisResultContainer.innerHTML=`<div class="mb-6 border-b pb-4"><h2 class="text-2xl font-bold text-slate-800">Hasil Analisis Murid</h2><div class="mt-2 grid grid-cols-3 gap-4 text-center"><div><p class="text-sm text-slate-500">Nama Murid</p><p id="student-name-result" class="font-bold text-lg">${studentSubmission.Nama}</p></div><div><p class="text-sm text-slate-500">Kelas</p><p id="student-class-result" class="font-bold text-lg">${studentSubmission.Kelas}</p></div><div><p class="text-sm text-slate-500">Skor Akhir</p><p id="student-score-result" class="font-bold text-lg">${studentSubmission.Skor}</p></div></div></div><div id="question-analysis-list" class="space-y-4"></div>`,allElements.classAnalysisResultContainer.classList.add("hidden"),allElements.studentAnalysisResultContainer.classList.remove("hidden");const questionAnalysisList=document.getElementById("question-analysis-list");questionAnalysisList.innerHTML="";const studentAnswers=parseStudentAnswerLog(studentSubmission.Nomor_soal_dikerjakan),questionNumbersInLog=Object.keys(studentAnswers).map(Number).sort((a,b)=>a-b);questionNumbersInLog.forEach(qNumber=>{const questionData=questionBank.find(q=>q.originalIndex==qNumber),studentAnswerData=studentAnswers[qNumber];if(!questionData)return;const isCorrect=studentAnswerData.isCorrect,resultClass=isCorrect?"border-green-500 bg-green-50":"border-red-500 bg-red-50";let answerHtml=`<p class="mt-2 text-sm">Jawaban Murid: <span class="font-semibold text-green-700">${studentAnswerData.answer} (Benar)</span></p>`;isCorrect||(answerHtml=`\n                        <p class="mt-2 text-sm">Jawaban Murid: <span class="font-semibold text-red-700">${studentAnswerData.answer} (Salah)</span></p>\n                        <p class="mt-1 text-sm">Kunci Jawaban: <span class="font-semibold text-blue-700">${questionData.answer}</span></p>\n                    `);const questionElement=`\n                    <div class="p-4 border-l-4 ${resultClass} rounded-r-lg">\n                        <p class="font-semibold text-slate-800">Soal #${qNumber}: ${questionData.question}</p>\n                        ${answerHtml}\n                    </div>\n                `;questionAnalysisList.innerHTML+=questionElement})}
+        function displayClassAnalysis(submissionsForClass,questionBank){allElements.classAnalysisResultContainer.innerHTML=`<div class="mb-6 border-b pb-4"><h2 class="text-2xl font-bold text-slate-800">Hasil Analisis Kelas</h2><div class="mt-2 grid grid-cols-3 gap-4 text-center"><div><p class="text-sm text-slate-500">Kelas</p><p id="class-name-result" class="font-bold text-lg"></p></div><div><p class="text-sm text-slate-500">Jumlah Peserta</p><p id="class-student-count" class="font-bold text-lg"></p></div><div><p class="text-sm text-slate-500">Rata-rata Skor</p><p id="class-average-score" class="font-bold text-lg"></p></div></div></div><div id="gemini-feature-container" class="my-6"><button id="generate-summary-btn" class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">✨ Buat Ringkasan Analisis dengan AI</button><div id="ai-summary-container" class="mt-4 hidden p-4 border rounded-lg bg-slate-50"><h3 class="text-lg font-bold text-slate-800 mb-2">Ringkasan Analisis AI</h3><div id="ai-summary-content" class="text-slate-700 space-y-2"></div></div></div><div id="class-question-analysis-list" class="space-y-4"></div>`,allElements.classAnalysisResultContainer.classList.remove("hidden"),allElements.studentAnalysisResultContainer.classList.add("hidden"),document.getElementById("generate-summary-btn").addEventListener("click",generateClassAnalysisSummary);const studentCount=submissionsForClass.length,totalScore=submissionsForClass.reduce((acc,s)=>acc+(parseInt(s.Skor)||0),0),avgScore=studentCount>0?(totalScore/studentCount).toFixed(1):0;document.getElementById("class-name-result").textContent=allElements.classSelect.value,document.getElementById("class-student-count").textContent=studentCount,document.getElementById("class-average-score").textContent=avgScore;const questionAnalysis={};submissionsForClass.forEach(submission=>{const studentAnswers=parseStudentAnswerLog(submission.Nomor_soal_dikerjakan);Object.keys(studentAnswers).forEach(qNumber=>{questionAnalysis[qNumber]||(questionAnalysis[qNumber]={correct:0,total:0,correctStudents:[]}),questionAnalysis[qNumber].total++,studentAnswers[qNumber].isCorrect&&(questionAnalysis[qNumber].correct++,questionAnalysis[qNumber].correctStudents.push(submission.Nama))})}),classAnalysisData={className:allElements.classSelect.value,studentCount:studentCount,averageScore:avgScore,questionDetails:[]};const classQuestionAnalysisList=document.getElementById("class-question-analysis-list");classQuestionAnalysisList.innerHTML="",questionBank.sort((a,b)=>a.originalIndex-b.originalIndex).forEach(qData=>{const qNumber=qData.originalIndex,analysis=questionAnalysis[qNumber];if(!analysis)return;const correctPercentage=analysis.correct/analysis.total*100;let bgColor="bg-green-100";correctPercentage<75&&(bgColor="bg-yellow-100"),correctPercentage<50&&(bgColor="bg-red-100"),classAnalysisData.questionDetails.push({nomorSoal:qNumber,teksSoal:qData.question.substring(0,100)+"...",persentaseBenar:correctPercentage.toFixed(0)});const correctStudentsList=analysis.correctStudents.length>0?analysis.correctStudents.join(", "):"Tidak ada",questionElement=`\n                    <div class="p-4 border rounded-lg ${bgColor}">\n                        <p class="font-semibold text-slate-800">Soal #${qNumber}: ${qData.question}</p>\n                        <p class="mt-2 text-sm">Kunci Jawaban: <span class="font-semibold text-blue-700">${qData.answer}</span></p>\n                        <div class="mt-2 text-sm">\n                            <span>Dijawab benar oleh <strong>${analysis.correct}</strong> dari <strong>${analysis.total}</strong> murid</span>\n                            <div class="w-full bg-slate-200 rounded-full h-2.5 mt-1">\n                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${correctPercentage.toFixed(0)}%"></div>\n                            </div>\n                            <span class="font-bold float-right">${correctPercentage.toFixed(0)}%</span>\n                        </div>\n                        <details class="mt-3 text-sm">\n                            <summary class="cursor-pointer text-slate-600 hover:text-slate-900">Lihat Murid yang Menjawab Benar (${analysis.correct})</summary>\n                            <div class="mt-2 p-2 bg-white rounded border text-slate-700">\n                                ${correctStudentsList}\n                            </div>\n                        </details>\n                    </div>\n                `;classQuestionAnalysisList.innerHTML+=questionElement})}
         async function onShowStudentAnalysis(){allElements.showStudentAnalysisBtn.disabled=!0;const studentIndex=allElements.studentSelect.value;if(""===studentIndex)return;const studentSubmission=allSubmissions.filter(s=>s.Kelas===allElements.classSelect.value)[studentIndex];let quizSheetURL="";studentSubmission.Kelas.startsWith("Kelas XII")?quizSheetURL=quizURLs["Kelas XII"]:studentSubmission.Kelas.startsWith("Kelas XI")?quizSheetURL=quizURLs["Kelas XI"]:studentSubmission.Kelas.startsWith("Kelas X")&&(quizSheetURL=quizURLs["Kelas X"]);if(!quizSheetURL)return void(allElements.loadingStatus.textContent="Bank soal tidak ditemukan.");allQuestions=await fetchQuestionBank(quizSheetURL),allQuestions.length>0&&displayStudentAnalysis(studentSubmission,allQuestions),allElements.showStudentAnalysisBtn.disabled=!1}
-        async function onShowClassAnalysis(){allElements.showClassAnalysisBtn.disabled=!0;const selectedClass=allElements.classSelect.value;if(!selectedClass)return;const submissionsForClass=allSubmissions.filter(s=>s.Kelas===selectedClass);if(0===submissionsForClass.length)return alert("Tidak ada data jawaban untuk kelas ini."),void(allElements.showClassAnalysisBtn.disabled=!1);let quizSheetURL="";selectedClass.startsWith("Kelas XII")?quizSheetURL=quizURLs["Kelas XII"]:selectedClass.startsWith("Kelas XI")?quizSheetURL=quizURLs["Kelas XI"]:selectedClass.startsWith("Kelas X")&&(quizSheetURL=quizURLs["Kelas X"]);if(!quizSheetURL)return void(allElements.loadingStatus.textContent="Bank soal tidak ditemukan.");allQuestions=await fetchQuestionBank(quizSheetURL),allQuestions.length>0&&displayClassAnalysis(submissionsForClass,allQuestions),allElements.showClassAnalysisBtn.disabled=!1}
-        async function generateClassAnalysisSummary(){const btn=allElements.generateSummaryBtn,contentDiv=allElements.aiSummaryContent,container=allElements.aiSummaryContainer;btn.disabled=!0,contentDiv.innerHTML='<p class="text-center">Menganalisis data dan membuat ringkasan...</p>',container.classList.remove("hidden");const difficultQuestions=classAnalysisData.questionDetails.sort((a,b)=>a.persentaseBenar-b.persentaseBenar).slice(0,5),userQuery=`\n                Data Analisis:\n                - Kelas: ${classAnalysisData.className}\n                - Tipe Ujian: ${allElements.examTypeSelect.options[allElements.examTypeSelect.selectedIndex].text}\n                - Skor Rata-rata: ${classAnalysisData.averageScore}\n                - Jumlah Murid: ${classAnalysisData.studentCount}\n                - Detail Soal Paling Sulit (Nomor Soal, Teks, Persentase Benar): ${JSON.stringify(difficultQuestions)}\n            `,systemPrompt="Anda adalah seorang guru Sejarah dan analis pendidikan yang berpengalaman. Berdasarkan data analisis jawaban kelas yang diberikan, buatlah ringkasan singkat dalam format poin-poin (gunakan tanda '*' untuk setiap poin). Ringkasan harus mencakup:\n1.  **Performa Umum Kelas:** Berikan komentar singkat tentang performa kelas secara keseluruhan berdasarkan skor rata-rata.\n2.  **Soal-Soal Paling Sulit:** Identifikasi soal-soal dengan persentase jawaban benar terendah dari data yang diberikan.\n3.  **Potensi Kesalahan Konsep:** Berdasarkan soal-soal sulit tersebut, berikan analisis kemungkinan kesalahan konsep atau materi yang belum dipahami oleh sebagian besar murid.\n4.  **Rekomendasi Tindak Lanjut:** Berikan saran konkret untuk guru, seperti topik mana yang perlu diulang.\nGunakan bahasa Indonesia yang profesional dan mudah dimengerti.",apiKey="",apiUrl=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`,payload={contents:[{parts:[{text:userQuery}]}],systemInstruction:{parts:[{text:systemPrompt}]}};try{const response=await fetch(apiUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`API Error: ${response.status}`);const result=await response.json();let text=result.candidates?.[0]?.content?.parts?.[0]?.text||"Tidak ada respons dari AI.";text=text.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>"),text=text.replace(/\*/g,"•"),contentDiv.innerHTML=`<div class="prose prose-sm max-w-none">${text.replace(/\n/g,"<br>")}</div>`}catch(error){console.error("Gemini API Error:",error),contentDiv.innerHTML='<p class="text-red-600">Terjadi kesalahan saat menghubungi AI. Silakan coba lagi nanti.</p>'}finally{btn.disabled=!1}}
+        async function onShowClassAnalysis(){allElements.showClassAnalysisBtn.disabled=!0;const selectedClass=allElements.classSelect.value;if(!selectedClass)return;const submissionsForClass=allSubmissions.filter(s=>s.Kelas===selectedClass);if(0===submissionsForClass.length)return alert("Tidak ada data jawaban untuk kelas ini."),void(allElements.showClassAnalysisBtn.disabled=!1);let quizSheetURL="";selectedClass.startsWith("Kelas XII")?quizSheetURL=quizURLs["Kelas XII"]:selected-lg?quizSheetURL=quizURLs["Kelas XI"]:selectedClass.startsWith("Kelas X")&&(quizSheetURL=quizURLs["Kelas X"]);if(!quizSheetURL)return void(allElements.loadingStatus.textContent="Bank soal tidak ditemukan.");allQuestions=await fetchQuestionBank(quizSheetURL),allQuestions.length>0&&displayClassAnalysis(submissionsForClass,allQuestions),allElements.showClassAnalysisBtn.disabled=!1}
+        async function generateClassAnalysisSummary(){const btn=document.getElementById("generate-summary-btn"),contentDiv=document.getElementById("ai-summary-content"),container=document.getElementById("ai-summary-container");btn.disabled=!0,contentDiv.innerHTML='<p class="text-center">Menganalisis data dan membuat ringkasan...</p>',container.classList.remove("hidden");const difficultQuestions=classAnalysisData.questionDetails.sort((a,b)=>a.persentaseBenar-b.persentaseBenar).slice(0,5),userQuery=`\n                Data Analisis:\n                - Kelas: ${classAnalysisData.className}\n                - Tipe Ujian: ${allElements.examTypeSelect.options[allElements.examTypeSelect.selectedIndex].text}\n                - Skor Rata-rata: ${classAnalysisData.averageScore}\n                - Jumlah Murid: ${classAnalysisData.studentCount}\n                - Detail Soal Paling Sulit (Nomor Soal, Teks, Persentase Benar): ${JSON.stringify(difficultQuestions)}\n            `,systemPrompt="Anda adalah seorang guru Sejarah dan analis pendidikan yang berpengalaman. Berdasarkan data analisis jawaban kelas yang diberikan, buatlah ringkasan singkat dalam format poin-poin (gunakan tanda '*' untuk setiap poin). Ringkasan harus mencakup:\n1.  **Performa Umum Kelas:** Berikan komentar singkat tentang performa kelas secara keseluruhan berdasarkan skor rata-rata.\n2.  **Soal-Soal Paling Sulit:** Identifikasi soal-soal dengan persentase jawaban benar terendah dari data yang diberikan.\n3.  **Potensi Kesalahan Konsep:** Berdasarkan soal-soal sulit tersebut, berikan analisis kemungkinan kesalahan konsep atau materi yang belum dipahami oleh sebagian besar murid.\n4.  **Rekomendasi Tindak Lanjut:** Berikan saran konkret untuk guru, seperti topik mana yang perlu diulang.\nGunakan bahasa Indonesia yang profesional dan mudah dimengerti.",apiKey="",apiUrl=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`,payload={contents:[{parts:[{text:userQuery}]}],systemInstruction:{parts:[{text:systemPrompt}]}};try{const response=await fetch(apiUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`API Error: ${response.status}`);const result=await response.json();let text=result.candidates?.[0]?.content?.parts?.[0]?.text||"Tidak ada respons dari AI.";text=text.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>"),text=text.replace(/\*/g,"•"),contentDiv.innerHTML=`<div class="prose prose-sm max-w-none">${text.replace(/\n/g,"<br>")}</div>`}catch(error){console.error("Gemini API Error:",error),contentDiv.innerHTML='<p class="text-red-600">Terjadi kesalahan saat menghubungi AI. Silakan coba lagi nanti.</p>'}finally{btn.disabled=!1}}
 
         document.addEventListener("DOMContentLoaded",async()=>{await fetchTeacherCredentials()});
         allElements.examTypeSelect.addEventListener("change",async()=>{const type=allElements.examTypeSelect.value;allElements.classSelect.disabled=!0,allElements.analysisTypeSelection.classList.add("hidden"),allElements.studentAnalysisResultContainer.classList.add("hidden"),allElements.classAnalysisResultContainer.classList.add("hidden"),type&&(allSubmissions=await fetchSubmissions(answerSheetURLs[type]),populateClassSelect())});
         allElements.classSelect.addEventListener("change",()=>{allElements.studentSelect.disabled=!0,allElements.studentSelect.innerHTML='<option value="">-- Pilih Murid --</option>',allElements.showStudentAnalysisBtn.disabled=!0,allElements.studentAnalysisResultContainer.classList.add("hidden"),allElements.classAnalysisResultContainer.classList.add("hidden"),allElements.classSelect.value?(populateStudentSelect(),allElements.analysisTypeSelection.classList.remove("hidden"),allElements.studentSelect.disabled=!1):allElements.analysisTypeSelection.classList.add("hidden")});
         allElements.studentSelect.addEventListener("change",()=>{allElements.showStudentAnalysisBtn.disabled=""===allElements.studentSelect.value});
-        allElements.showStudentAnalysisBtn.addEventListener("click",onShowStudentAnalysis),allElements.showClassAnalysisBtn.addEventListener("click",onShowClassAnalysis),allElements.generateSummaryBtn.addEventListener("click",generateClassAnalysisSummary);
+        allElements.showStudentAnalysisBtn.addEventListener("click",onShowStudentAnalysis),allElements.showClassAnalysisBtn.addEventListener("click",onShowClassAnalysis);
         allElements.submitLoginButton.addEventListener("click",handleLogin),allElements.teacherPasswordInput.addEventListener("keyup",event=>{"Enter"===event.key&&handleLogin()});
         allElements.tabMonitor.addEventListener("click",()=>switchTab("monitor")),allElements.tabHistory.addEventListener("click",()=>switchTab("history")),allElements.tabAnalysis.addEventListener("click",()=>switchTab("analysis"));
         allElements.monitorUtamaBtn.addEventListener("click",()=>showMonitoringScreen("utama")),allElements.monitorRemedialBtn.addEventListener("click",()=>showMonitoringScreen("remedial")),allElements.monitorBackButton.addEventListener("click",()=>{allElements.monitorDisplayScreen.classList.add("hidden"),allElements.monitorSelectionScreen.classList.remove("hidden"),unsubscribe&&unsubscribe()});
         allElements.historyList.addEventListener("click",handleDeleteRequest);
         allElements.clearHistoryModal.innerHTML=`<div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg text-center"><h2 class="text-2xl font-bold text-red-600">Konfirmasi Hapus Riwayat</h2><p class="mt-4 text-slate-600">Apakah Anda yakin ingin menghapus <strong>SEMUA</strong> riwayat pelanggaran secara permanen? Tindakan ini tidak dapat diurungkan.</p><p id="clear-status" class="text-sm text-slate-500 mt-2 h-5"></p><div class="mt-8 flex justify-center gap-4"><button id="cancel-clear-history-btn" class="bg-slate-200 text-slate-800 font-bold py-2 px-6 rounded-lg hover:bg-slate-300">Batal</button><button id="confirm-clear-history-btn" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">Ya, Hapus Semua</button></div></div>`;
         allElements.deleteEntryModal.innerHTML=`<div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg text-center"><h2 class="text-2xl font-bold text-red-600">Konfirmasi Hapus</h2><p class="mt-4 text-slate-600">Apakah Anda yakin ingin menghapus riwayat pelanggaran untuk murid <strong id="student-name-to-delete"></strong>?</p><div class="mt-8 flex justify-center gap-4"><button id="cancel-delete-entry-btn" class="bg-slate-200 text-slate-800 font-bold py-2 px-6 rounded-lg hover:bg-slate-300">Batal</button><button id="confirm-delete-entry-btn" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">Ya, Hapus</button></div></div>`;
+        allElements.resetLiveModal.innerHTML=`<div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg text-center"><h2 class="text-2xl font-bold text-orange-600">Konfirmasi Reset Sesi</h2><p class="mt-4 text-slate-600">Apakah Anda yakin ingin mereset <strong>SEMUA</strong> sesi live yang sedang berjalan? Semua data murid yang sedang mengerjakan di monitor akan dihapus.</p><p id="reset-live-status" class="text-sm text-slate-500 mt-2 h-5"></p><div class="mt-8 flex justify-center gap-4"><button id="cancel-reset-live-btn" class="bg-slate-200 text-slate-800 font-bold py-2 px-6 rounded-lg hover:bg-slate-300">Batal</button><button id="confirm-reset-live-btn" class="bg-orange-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-orange-700">Ya, Reset Sesi</button></div></div>`;
         allElements.clearHistoryButton.addEventListener("click",()=>allElements.clearHistoryModal.classList.remove("hidden"));
         document.getElementById("cancel-clear-history-btn").addEventListener("click",()=>allElements.clearHistoryModal.classList.add("hidden"));
         document.getElementById("confirm-clear-history-btn").addEventListener("click",clearCheatingHistory);
         document.getElementById("cancel-delete-entry-btn").addEventListener("click",()=>allElements.deleteEntryModal.classList.add("hidden"));
         document.getElementById("confirm-delete-entry-btn").addEventListener("click",confirmDelete);
         allElements.resetLiveSessionButton.addEventListener('click',()=>allElements.resetLiveModal.classList.remove('hidden'));
-        allElements.cancelResetLiveBtn.addEventListener('click',()=>allElements.resetLiveModal.classList.add('hidden'));
-        allElements.confirmResetLiveBtn.addEventListener('click',clearLiveSession);
+        document.getElementById("cancel-reset-live-btn").addEventListener('click',()=>allElements.resetLiveModal.classList.add('hidden'));
+        document.getElementById("confirm-reset-live-btn").addEventListener('click',clearLiveSession);
     </script>
 </body>
 </html>
